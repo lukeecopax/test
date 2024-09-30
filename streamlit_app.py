@@ -17,7 +17,7 @@ st.title("Freight Rate Discrepancy Checker")
 @st.cache_data
 def load_excel_from_github():
     # Replace with the raw GitHub URL for the Excel file
-    excel_url = 'https://raw.githubusercontent.com/your-username/your-repo/main/zzEcopax%20-%20Q3%20Analysis.xlsx'
+    excel_url = 'https://github.com/lukeecopax/test/raw/refs/heads/main/zzEcopax%20-%20Q3%20Analysis.xlsx'
     return pd.read_excel(excel_url, sheet_name='Bid data', skiprows=5)
 
 # Convert PDF first page to Base64 image for processing
