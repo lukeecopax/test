@@ -15,8 +15,10 @@ st.title("Freight Rate Discrepancy Checker")
 
 # Cache the loading of Excel file to prevent reloading every time the script runs
 @st.cache_data
-def load_excel(file):
-    return pd.read_excel(file, sheet_name='Bid data', skiprows=5)
+def load_excel_from_github():
+    # Replace with the raw GitHub URL for the Excel file
+    excel_url = 'https://raw.githubusercontent.com/your-username/your-repo/main/zzEcopax%20-%20Q3%20Analysis.xlsx'
+    return pd.read_excel(excel_url, sheet_name='Bid data', skiprows=5)
 
 # Convert PDF first page to Base64 image for processing
 def pdf_first_page_to_base64(pdf_file):
@@ -50,18 +52,15 @@ def process_pdf(pdf_file, model="gpt-4"):
 
 # Main function to process and compare data
 def main():
-    # Upload Excel file
-    excel_file = st.file_uploader("Upload the 'zzEcopax - Q3 Analysis.xlsx' file", type=["xlsx"])
+    # Load the Excel data from GitHub
+    df_excel = load_excel_from_github()
+    df_excel = df_excel[['Broker Name', 'Origin City(S)', 'Destination City', 'Destination State', 'R2 Rate', 'Assign to']]
+    df_excel = df_excel.applymap(lambda x: x.lower() if isinstance(x, str) else x)
     
     # Upload PDF files
     pdf_files = st.file_uploader("Upload Invoice PDF files", type=["pdf"], accept_multiple_files=True)
 
-    if excel_file and pdf_files:
-        # Load the Excel data
-        df_excel = load_excel(excel_file)
-        df_excel = df_excel[['Broker Name', 'Origin City(S)', 'Destination City', 'Destination State', 'R2 Rate', 'Assign to']]
-        df_excel = df_excel.applymap(lambda x: x.lower() if isinstance(x, str) else x)
-        
+    if pdf_files:
         # Initialize summary
         total_processed = 0
         matched_rates = 0
